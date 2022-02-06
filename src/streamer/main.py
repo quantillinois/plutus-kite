@@ -13,7 +13,7 @@ load_dotenv()
 try:
     API_KEY = read_env("API_KEY")
     API_SECRET = read_env("API_SECRET")
-    LOGIN = read_env("LOGIN")
+    USERNAME = read_env("USERNAME")
     PASSW = read_env("PASSW")
     PIN = read_env("PIN")
     STREAMER_PATH = read_env("STREAMER_PATH")
@@ -22,7 +22,7 @@ except LookupError as err:
 
 logging.basicConfig(level=logging.DEBUG)
 
-ACCESS_TOKEN = get_token((LOGIN, PASSW, PIN), API_KEY, STREAMER_PATH)
+ACCESS_TOKEN = get_token((USERNAME, PASSW, PIN), API_KEY, STREAMER_PATH)
 
 # Check if we've already got an access token.
 if not ACCESS_TOKEN:
