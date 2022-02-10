@@ -13,16 +13,16 @@ load_dotenv()
 try:
     API_KEY = read_env("API_KEY")
     API_SECRET = read_env("API_SECRET")
-    LOGIN = read_env("LOGIN")
-    PASSW = read_env("PASSW")
+    USERNAME = read_env("USERNAME")
+    PASSWORD = read_env("PASSWORD")
     PIN = read_env("PIN")
-    STREAMER_PATH = read_env("STREAMER_PATH")
+    CHROMEDRIVER = read_env("CHROMEDRIVER")
 except LookupError as err:
     raise LookupError("Did not find the following env variable") from err
 
 logging.basicConfig(level=logging.DEBUG)
 
-ACCESS_TOKEN = get_token((LOGIN, PASSW, PIN), API_KEY, STREAMER_PATH)
+ACCESS_TOKEN = get_token((USERNAME, PASSWORD, PIN), API_KEY, CHROMEDRIVER)
 
 # Check if we've already got an access token.
 if not ACCESS_TOKEN:
