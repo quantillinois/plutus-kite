@@ -2,35 +2,53 @@
 Module to stream data from the KITE API via a websocket connection
 """
 import logging
-import sys
 from kiteconnect import KiteTicker
 from dotenv import load_dotenv
 # from get_token import get_token
 from token_request import get_token_from_endpoint
 from utils import read_env
+
 # Load the environment variables
 load_dotenv()
 # LOADING ENV VARS FROM .env
 try:
-    # API_KEY = read_env("API_KEY")
-    # API_SECRET = read_env("API_SECRET")
-    # USERNAME = read_env("USERNAME")
-    # PASSWORD = read_env("PASSWORD")
-    # PIN = read_env("PIN")
-    # CHROMEDRIVER = read_env("CHROMEDRIVER")
     ENDPOINT = read_env("ENDPOINT")
 except LookupError as err:
     raise LookupError("Did not find the following env variable") from err
 
 logging.basicConfig(level=logging.DEBUG)
 
-ACCESS_TOKEN = get_token_from_endpoint(ENDPOINT)[0] # get the access token
-API_KEY = get_token_from_endpoint(ENDPOINT)[1]
-print(ACCESS_TOKEN, API_KEY)
+# load access token from a temp file if it exists. else, set the value to None
+try:
+    content = [] # empty list to store the content of the file
+    with open("__TOKEN_STORE.txt", "r") as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            content.append(line.strip())
+
+    # Access token is stored in the first line of the file
+    ACCESS_TOKEN = content[0]
+    # Api key is stored in the second line of the file
+    API_KEY = content[1]
+
+except FileNotFoundError:
+    ACCESS_TOKEN = None
+    API_KEY = None
+
 # Check if we've already got an access token.
-if not ACCESS_TOKEN:
-    print("Access token not found.")
-    sys.exit(1)
+if not ACCESS_TOKEN or not API_KEY:
+    # We haven't writen the token and key to a file
+    ACCESS_TOKEN = get_token_from_endpoint(ENDPOINT)[0] # get the access token
+    API_KEY = get_token_from_endpoint(ENDPOINT)[1] # get the api key
+    # Write the token and key to a file
+    with open("__TOKEN_STORE.txt", "w") as f:
+        f.write(ACCESS_TOKEN)
+        f.write("\n")
+        f.write(API_KEY)
+    # Initialise Kite Connect object with access token.
+    kws = KiteTicker(API_KEY, ACCESS_TOKEN)
 else:
     try:
         # Initialise Kite Connect object with access token.
