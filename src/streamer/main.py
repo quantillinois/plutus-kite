@@ -4,9 +4,10 @@ Module to stream data from the KITE API via a websocket connection
 import logging
 from kiteconnect import KiteTicker
 from dotenv import load_dotenv
-# from get_token import get_token
+import threading
 from token_request import get_token_from_endpoint
 from utils import read_env
+from write_data import processor
 
 # Load the environment variables
 load_dotenv()
@@ -59,7 +60,9 @@ else:
 
 def on_ticks(web_socket, ticks):
     """Callback to receive ticks."""
-    logging.debug("Ticks: %s", ticks)
+    # logging.debug("Ticks: %s", ticks)
+    data = ticks
+    threading.Thread(target=processor, args=(data,)).start()
 
 def on_connect(web_socket, response):
     """Callback on successful connect.

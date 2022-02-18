@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 src/streamer/bin
+src/streamer/realtime
 
 # C extensions
 *.so
