@@ -21,12 +21,13 @@ def processor(data):
     times = [(time.time()-40000)]
     # make the string format for the date
     strdate = datetime.now(timezone('UTC')).astimezone(timezone('Asia/Kolkata')).strftime("%Y-%m-%d %H:%M:%S")
-    print(data)
+    # print(data)
 
     for i in data:
         # print(f'{strdate}:{i["instrument_token"]}:{i["last_price"]}')
         with open(f'./realtime/prices/{i["instrument_token"]}.csv', 'a+') as f:
-            f.write(f"{strdate},{i['last_price']},{i['last_quantity']},{i['buy_quantity']},{i['sell_quantity']},{i['average_price']},{i['volume']},{i['change']}\n")
+            print(i)
+            f.write(f"{strdate},{i['last_price']},{i['total_buy_quantity']},{i['total_sell_quantity']},{i['average_traded_price']},{i['volume_traded']},{i['change']}\n")
         with open(f'./realtime/depth/{i["instrument_token"]}.csv', 'a+') as f:
             try: 
                 for j in i['depth']['sell']:

@@ -133,3 +133,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 src/streamer/__TOKEN_STORE.txt
+src/streamer/json.json
