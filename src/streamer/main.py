@@ -5,25 +5,28 @@ import logging
 import sys
 from kiteconnect import KiteTicker
 from dotenv import load_dotenv
-from get_token import get_token
+# from get_token import get_token
+from token_request import get_token_from_endpoint
 from utils import read_env
 # Load the environment variables
 load_dotenv()
 ## LOADING ENV VARS FROM .env
 try:
-    API_KEY = read_env("API_KEY")
-    API_SECRET = read_env("API_SECRET")
-    USERNAME = read_env("USERNAME")
-    PASSWORD = read_env("PASSWORD")
-    PIN = read_env("PIN")
-    CHROMEDRIVER = read_env("CHROMEDRIVER")
+    # API_KEY = read_env("API_KEY")
+    # API_SECRET = read_env("API_SECRET")
+    # USERNAME = read_env("USERNAME")
+    # PASSWORD = read_env("PASSWORD")
+    # PIN = read_env("PIN")
+    # CHROMEDRIVER = read_env("CHROMEDRIVER")
+    ENDPOINT = read_env("ENDPOINT")
 except LookupError as err:
     raise LookupError("Did not find the following env variable") from err
 
 logging.basicConfig(level=logging.DEBUG)
 
-ACCESS_TOKEN = get_token((USERNAME, PASSWORD, PIN), API_KEY, CHROMEDRIVER)
-
+ACCESS_TOKEN = get_token_from_endpoint(ENDPOINT)[0] # get the access token
+API_KEY = get_token_from_endpoint(ENDPOINT)[1]
+print(ACCESS_TOKEN, API_KEY)
 # Check if we've already got an access token.
 if not ACCESS_TOKEN:
     print("Access token not found.")
